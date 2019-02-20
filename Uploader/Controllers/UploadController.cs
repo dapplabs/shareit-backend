@@ -57,7 +57,7 @@ namespace Angular5FileUpload.Controllers
 
         private async Task<string> AddToIPFSAsync(string fullPath)
         {
-            using (var ipfs = new IpfsClient("http://10.244.237.128:5001"))
+            using (var ipfs = new IpfsClient("http://ipfs:5001"))
             {
                 var stream = System.IO.File.OpenRead(fullPath);
                 //Name of the file to add
