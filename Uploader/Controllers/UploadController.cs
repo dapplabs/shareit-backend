@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
@@ -26,6 +27,7 @@ namespace Angular5FileUpload.Controllers
         {
             try
             {
+                if (Request.Form.Files.Any(x => x.Length > 500000000)) throw new Exception("Archivo muy grande...");
                 Dictionary<string, string> fileHashes = new Dictionary<string, string>();
                 foreach (var file in Request.Form.Files)
                 {
@@ -40,17 +42,18 @@ namespace Angular5FileUpload.Controllers
                     {
                         string fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
                         string fullPath = Path.Combine(newPath, fileName);
-                        using (var stream = new FileStream(fullPath, FileMode.Create))
+                        using (var stream = new MemoryStream())
                         {
                             file.CopyTo(stream);
+                            fileHashes.Add(fileName, await AddToIPFSAsync(fullPath));
                         }
-                        fileHashes.Add(fileName, await AddToIPFSAsync(fullPath));
                     }
                 }
                 return new OkObjectResult(fileHashes);
             }
             catch (System.Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return new StatusCodeResult(500);
             }
         }
