@@ -42,18 +42,19 @@ namespace Angular5FileUpload.Controllers
                     {
                         string fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
                         string fullPath = Path.Combine(newPath, fileName);
-                        using (var stream = new MemoryStream())
+                        using (var stream = new FileStream(fullPath, FileMode.Create))
                         {
                             file.CopyTo(stream);
-                            fileHashes.Add(fileName, await AddToIPFSAsync(fullPath));
                         }
+                        fileHashes.Add(fileName, await AddToIPFSAsync(fullPath));
+                        if (System.IO.File.Exists(fullPath)) System.IO.File.Delete(fullPath);
                     }
                 }
                 return new OkObjectResult(fileHashes);
             }
             catch (System.Exception ex)
             {
-                Console.WriteLine(ex);
+                Console.WriteLine(ex.Message);
                 return new StatusCodeResult(500);
             }
         }
