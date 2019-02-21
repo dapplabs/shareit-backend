@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
@@ -36,6 +35,12 @@ namespace Uploader
             //corsBuilder.WithOrigins("http://localhost:56573");
             corsBuilder.AllowCredentials();
 
+            services.Configure<FormOptions>(x =>
+            {
+                x.ValueLengthLimit = 1073741824;
+                x.MultipartBodyLengthLimit = 1073741824;
+            });
+
             services.AddCors(options =>
             {
                 options.AddPolicy("SiteCorsPolicy", corsBuilder.Build());
@@ -44,11 +49,6 @@ namespace Uploader
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            if (string.IsNullOrWhiteSpace(env.WebRootPath))
-            {
-                env.WebRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
-            }
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
