@@ -53,7 +53,7 @@ namespace Angular5FileUpload.Controllers
             }
             catch (System.Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex);
                 return new StatusCodeResult(500);
             }
         }
