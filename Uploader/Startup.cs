@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
@@ -43,6 +44,11 @@ namespace Uploader
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            if (string.IsNullOrWhiteSpace(env.WebRootPath))
+            {
+                env.WebRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+            }
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
