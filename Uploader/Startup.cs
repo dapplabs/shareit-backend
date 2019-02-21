@@ -49,6 +49,11 @@ namespace Uploader
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            if (string.IsNullOrWhiteSpace(env.WebRootPath))
+            {
+                env.WebRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+            }
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
