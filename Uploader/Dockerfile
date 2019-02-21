@@ -6,7 +6,7 @@ FROM microsoft/dotnet:2.1-sdk AS build
 WORKDIR /src
 COPY *.sln ./
 COPY Uploader/Uploader.csproj Uploader/
-RUN dotnet restore
+RUN dotnet restore Uploader/Uploader.csproj
 COPY . .
 WORKDIR /src/Uploader
 RUN dotnet build -c Release -o /app

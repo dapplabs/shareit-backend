@@ -1,8 +1,29 @@
 version: '3'
 
 services:
+  ipfs:
+    image: jbenet/go-ipfs
+    networks:
+      - ipfs
+    ports:
+      - 4001:4001
+      - 5001:5001
+      - 8081:8080
+    volumes:
+      - /media/Almacenamiento/ipfs/export:/export
+      - /media/Almacenamiento/ipfs/data:/data/ipfs
+
   uploader:
     image: uploader
     build:
       context: .
       dockerfile: Uploader/Dockerfile
+    networks:
+      - ipfs
+    ports:
+      - 8080:80
+    depends_on:
+      - ipfs
+
+networks:
+  ipfs:
