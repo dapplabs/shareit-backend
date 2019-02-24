@@ -31,9 +31,11 @@ namespace Angular5FileUpload.Controllers
                 Dictionary<string, string> fileHashes = new Dictionary<string, string>();
                 foreach (var file in Request.Form.Files)
                 {
+                    Console.WriteLine($"New file is being upload type: {file.ContentType}, fileName: {file.FileName}, name: {file.Name}, length: {file.Length/1048576}Mb");
                     string folderName = "Upload";
                     string webRootPath = _hostingEnvironment.WebRootPath;
                     string newPath = Path.Combine(webRootPath, folderName);
+                    string fileHash = "";
                     if (!Directory.Exists(newPath))
                     {
                         Directory.CreateDirectory(newPath);
@@ -46,9 +48,11 @@ namespace Angular5FileUpload.Controllers
                         {
                             file.CopyTo(stream);
                         }
-                        fileHashes.Add(fileName, await AddToIPFSAsync(fullPath));
+                        fileHash = await AddToIPFSAsync(fullPath);
+                        fileHashes.Add(fileName, fileHash);
                         if (System.IO.File.Exists(fullPath)) System.IO.File.Delete(fullPath);
                     }
+                    Console.WriteLine($"New file is uploaded with hash {fileHash}. length: {file.Length / 1048576}Mb");
                 }
                 return new OkObjectResult(fileHashes);
             }
