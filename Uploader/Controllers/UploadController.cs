@@ -8,7 +8,7 @@ using System.Linq;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
-namespace Angular5FileUpload.Controllers
+namespace Uploader.Controllers
 {
     [Produces("application/json")]
     [Route("api/[controller]")]
